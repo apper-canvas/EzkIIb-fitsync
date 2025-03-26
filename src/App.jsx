@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X, Home as HomeIcon, Calendar, Dumbbell, Users, Bell, User } from 'lucide-react';
+import { Sun, Moon, Menu, X, Calendar, Dumbbell, Users, Bell, User } from 'lucide-react';
+import { Home as HomeIcon } from 'lucide-react';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 
