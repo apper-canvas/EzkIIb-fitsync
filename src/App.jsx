@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, Menu, X, Calendar, Dumbbell, Users, Bell, User } from 'lucide-react';
 import { Home as HomeIcon } from 'lucide-react';
 import Home from './pages/Home';
+import Classes from './pages/Classes';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -139,6 +140,7 @@ function App() {
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />} />
+              <Route path="/classes" element={<Classes />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>
