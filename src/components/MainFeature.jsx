@@ -2,43 +2,28 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, Users, MapPin, Search, Plus, X, Filter, ChevronDown, ImageOff } from 'lucide-react';
 
-// Image handling with error fallbacks
+// Image handling with Unsplash images
 const ClassImage = ({ type, alt }) => {
   const [imageError, setImageError] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
 
+  // Unsplash image URLs for different class types
+  const unsplashImages = {
+    Cardio: "https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?q=80&w=800&auto=format&fit=crop",
+    Strength: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=800&auto=format&fit=crop",
+    Yoga: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop",
+    Pilates: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=800&auto=format&fit=crop"
+  };
+
   useEffect(() => {
-    // Try to dynamically import the image
-    const loadImage = async () => {
-      try {
-        // Attempt to load the image based on class type
-        let importedImage;
-        
-        switch (type) {
-          case 'Cardio':
-            importedImage = await import('../assets/cardio-class.jpg').catch(() => null);
-            break;
-          case 'Strength':
-            importedImage = await import('../assets/strength-class.jpg').catch(() => null);
-            break;
-          case 'Yoga':
-            importedImage = await import('../assets/yoga-class.jpg').catch(() => null);
-            break;
-          case 'Pilates':
-            importedImage = await import('../assets/pilates-class.jpg').catch(() => null);
-            break;
-          default:
-            importedImage = null;
-        }
-        
-        setImageSrc(importedImage?.default || null);
-      } catch (error) {
-        console.error(`Failed to load image for ${type}:`, error);
-        setImageError(true);
-      }
-    };
-    
-    loadImage();
+    // Set the image source based on class type
+    try {
+      const imageUrl = unsplashImages[type] || "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800&auto=format&fit=crop";
+      setImageSrc(imageUrl);
+    } catch (error) {
+      console.error(`Failed to load image for ${type}:`, error);
+      setImageError(true);
+    }
   }, [type]);
 
   // Handle image error
