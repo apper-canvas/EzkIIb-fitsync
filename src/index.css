@@ -44,6 +44,14 @@
   .label {
     @apply block text-sm font-medium text-surface-700 dark:text-surface-300 mb-1;
   }
+
+  .class-image {
+    @apply w-full h-full object-cover;
+  }
+  
+  .class-image-container {
+    @apply overflow-hidden rounded-xl;
+  }
 }
 
 @layer utilities {

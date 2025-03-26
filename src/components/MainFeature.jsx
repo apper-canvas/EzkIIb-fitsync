@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, Users, MapPin, Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
 
+// Import class images
+import cardioImage from '../assets/cardio-class.jpg';
+import strengthImage from '../assets/strength-class.jpg';
+import yogaImage from '../assets/yoga-class.jpg';
+import pilatesImage from '../assets/pilates-class.jpg';
+
 const MainFeature = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -11,6 +17,22 @@ const MainFeature = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedClass, setSelectedClass] = useState(null);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  // Get class image based on type
+  const getClassImage = (type) => {
+    switch (type) {
+      case 'Cardio':
+        return cardioImage;
+      case 'Strength':
+        return strengthImage;
+      case 'Yoga':
+        return yogaImage;
+      case 'Pilates':
+        return pilatesImage;
+      default:
+        return cardioImage; // Default fallback
+    }
+  };
 
   // Mock class data
   const mockClasses = [
@@ -335,11 +357,12 @@ const MainFeature = () => {
                 className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-surface-50 dark:bg-surface-700/50 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors cursor-pointer"
               >
                 <div className="flex items-center space-x-4 mb-3 md:mb-0">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-                    {cls.type === 'Cardio' && <Activity className="text-primary" size={20} />}
-                    {cls.type === 'Strength' && <Dumbbell className="text-primary" size={20} />}
-                    {cls.type === 'Yoga' && <Yoga className="text-primary" size={20} />}
-                    {cls.type === 'Pilates' && <Flame className="text-primary" size={20} />}
+                  <div className="w-16 h-16 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center overflow-hidden">
+                    <img 
+                      src={getClassImage(cls.type)} 
+                      alt={`${cls.type} class`} 
+                      className="class-image"
+                    />
                   </div>
                   <div>
                     <h3 className="font-medium">{cls.name}</h3>
@@ -406,7 +429,13 @@ const MainFeature = () => {
                 </div>
               ) : (
                 <>
-                  <div className="relative h-40 bg-gradient-to-r from-primary to-accent">
+                  <div className="relative h-40">
+                    <img 
+                      src={getClassImage(selectedClass.type)} 
+                      alt={`${selectedClass.type} class`} 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/30"></div>
                     <button 
                       onClick={closeClassDetails}
                       className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
