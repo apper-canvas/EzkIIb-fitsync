@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X, Home, Calendar, Dumbbell, Users, Bell, User } from 'lucide-react';
+import { Sun, Moon, Menu, X, Home as HomeIcon, Calendar, Dumbbell, Users, Bell, User } from 'lucide-react';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 
@@ -41,7 +41,7 @@ function App() {
   };
 
   const navItems = [
-    { icon: <Home size={20} />, label: "Dashboard", path: "/" },
+    { icon: <HomeIcon size={20} />, label: "Dashboard", path: "/" },
     { icon: <Calendar size={20} />, label: "Classes", path: "/classes" },
     { icon: <Dumbbell size={20} />, label: "Workouts", path: "/workouts" },
     { icon: <Users size={20} />, label: "Trainers", path: "/trainers" },
