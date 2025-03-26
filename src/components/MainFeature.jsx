@@ -1,12 +1,72 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, Users, MapPin, Search, Plus, X, Filter, ChevronDown } from 'lucide-react';
+import { Calendar, Clock, Users, MapPin, Search, Plus, X, Filter, ChevronDown, ImageOff } from 'lucide-react';
 
-// Import class images
-import cardioImage from '../assets/cardio-class.jpg';
-import strengthImage from '../assets/strength-class.jpg';
-import yogaImage from '../assets/yoga-class.jpg';
-import pilatesImage from '../assets/pilates-class.jpg';
+// Image handling with error fallbacks
+const ClassImage = ({ type, alt }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
+
+  useEffect(() => {
+    // Try to dynamically import the image
+    const loadImage = async () => {
+      try {
+        // Attempt to load the image based on class type
+        let importedImage;
+        
+        switch (type) {
+          case 'Cardio':
+            importedImage = await import('../assets/cardio-class.jpg').catch(() => null);
+            break;
+          case 'Strength':
+            importedImage = await import('../assets/strength-class.jpg').catch(() => null);
+            break;
+          case 'Yoga':
+            importedImage = await import('../assets/yoga-class.jpg').catch(() => null);
+            break;
+          case 'Pilates':
+            importedImage = await import('../assets/pilates-class.jpg').catch(() => null);
+            break;
+          default:
+            importedImage = null;
+        }
+        
+        setImageSrc(importedImage?.default || null);
+      } catch (error) {
+        console.error(`Failed to load image for ${type}:`, error);
+        setImageError(true);
+      }
+    };
+    
+    loadImage();
+  }, [type]);
+
+  // Handle image error
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  if (imageError || !imageSrc) {
+    // Fallback content when image fails to load
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-primary/10">
+        <div className="flex flex-col items-center justify-center text-primary">
+          <ImageOff size={24} />
+          <span className="text-xs mt-1">{type}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={imageSrc} 
+      alt={alt || `${type} class`} 
+      className="class-image"
+      onError={handleImageError}
+    />
+  );
+};
 
 const MainFeature = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,22 +77,6 @@ const MainFeature = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedClass, setSelectedClass] = useState(null);
   const [bookingSuccess, setBookingSuccess] = useState(false);
-
-  // Get class image based on type
-  const getClassImage = (type) => {
-    switch (type) {
-      case 'Cardio':
-        return cardioImage;
-      case 'Strength':
-        return strengthImage;
-      case 'Yoga':
-        return yogaImage;
-      case 'Pilates':
-        return pilatesImage;
-      default:
-        return cardioImage; // Default fallback
-    }
-  };
 
   // Mock class data
   const mockClasses = [
@@ -357,12 +401,8 @@ const MainFeature = () => {
                 className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-xl bg-surface-50 dark:bg-surface-700/50 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors cursor-pointer"
               >
                 <div className="flex items-center space-x-4 mb-3 md:mb-0">
-                  <div className="w-16 h-16 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center overflow-hidden">
-                    <img 
-                      src={getClassImage(cls.type)} 
-                      alt={`${cls.type} class`} 
-                      className="class-image"
-                    />
+                  <div className="w-16 h-16 rounded-xl class-image-container">
+                    <ClassImage type={cls.type} alt={`${cls.type} class`} />
                   </div>
                   <div>
                     <h3 className="font-medium">{cls.name}</h3>
@@ -429,12 +469,8 @@ const MainFeature = () => {
                 </div>
               ) : (
                 <>
-                  <div className="relative h-40">
-                    <img 
-                      src={getClassImage(selectedClass.type)} 
-                      alt={`${selectedClass.type} class`} 
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="relative h-40 class-image-container overflow-hidden">
+                    <ClassImage type={selectedClass.type} alt={`${selectedClass.type} class`} />
                     <div className="absolute inset-0 bg-black/30"></div>
                     <button 
                       onClick={closeClassDetails}
